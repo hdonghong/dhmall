@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    username: root
+    password: toor
+    url: jdbc:mysql://192.168.56.10:3306/gulimall_sms
+    driver-class-name: com.mysql.jdbc.Driver
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+# 每个服务应该写明服务名，才能在Nacos注册中心可视化界面中显示
+  application:
+    name: dhmall-coupon
+mybatis-plus:
+  mapper-locations: classpath:/mapper/**/*.xml
+  global-config:
+    db-config:
+      id-type: auto
+server:
+  port: 7000
