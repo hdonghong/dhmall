@@ -4,6 +4,15 @@ spring:
     password: toor
     url: jdbc:mysql://192.168.56.10:3306/gulimall_wms
     driver-class-name: com.mysql.jdbc.Driver
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+  # 每个服务应该写明服务名，才能在Nacos注册中心可视化界面中显示
+  application:
+    name: dhmall-ware
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
 mybatis-plus:
   mapper-locations: classpath:/mapper/**/*.xml
   global-config:
@@ -11,3 +20,6 @@ mybatis-plus:
       id-type: auto
 server:
   port: 11000
+logging:
+  level:
+    top.hdonghong.dhmall: debug

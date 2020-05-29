@@ -3,6 +3,7 @@ package top.hdonghong.dhmall.product.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import top.hdonghong.common.utils.PageUtils;
 import top.hdonghong.dhmall.product.entity.SpuInfoEntity;
+import top.hdonghong.dhmall.product.vo.SpuSaveVO;
 
 import java.util.Map;
 
@@ -16,5 +17,11 @@ import java.util.Map;
 public interface SpuInfoService extends IService<SpuInfoEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    void saveSpuInfo(SpuSaveVO vo);
+
+    void saveBaseSpuInfo(SpuInfoEntity infoEntity);
+
+    PageUtils queryPageByCondition(Map<String, Object> params);
 }
 

@@ -10,5 +10,60 @@ spring:
           predicates:
             - Query=url,baidu
 
+        - id: product_route
+          uri: lb://dhmall-product
+          predicates:
+            ## 路径匹配
+            - Path=/api/product/**
+          filters:
+            ## 路径重写
+            - RewritePath=/api/(?<segment>.*),/$\{segment}
+
+        - id: member_route
+          uri: lb://dhmall-member
+          predicates:
+            ## 路径匹配
+            - Path=/api/member/**
+          filters:
+            ## 路径重写
+            - RewritePath=/api/(?<segment>.*),/$\{segment}
+
+        - id: coupon_route
+          uri: lb://dhmall-coupon
+          predicates:
+            ## 路径匹配
+            - Path=/api/coupon/**
+          filters:
+            ## 路径重写
+            - RewritePath=/api/(?<segment>.*),/$\{segment}
+
+        - id: ware_route
+          uri: lb://dhmall-ware
+          predicates:
+            ## 路径匹配
+            - Path=/api/ware/**
+          filters:
+            ## 路径重写
+            - RewritePath=/api/(?<segment>.*),/$\{segment}
+
+        - id: thirdparty_route
+          uri: lb://dhmall-third-party
+          predicates:
+            ## 路径匹配
+            - Path=/api/thirdparty/**
+          filters:
+            ## 路径重写
+            - RewritePath=/api/thirdparty/(?<segment>.*),/$\{segment}
+
+        - id: admin_route
+          uri: lb://renren-fast
+          predicates:
+            ## 路径匹配
+            - Path=/api/**
+          filters:
+            ## 路径重写
+            - RewritePath=/api/(?<segment>.*),/renren-fast/$\{segment}
+## 前端项目，/api
+
 server:
   port: 88

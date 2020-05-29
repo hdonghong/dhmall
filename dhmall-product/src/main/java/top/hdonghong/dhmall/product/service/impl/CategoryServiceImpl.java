@@ -1,26 +1,30 @@
 package top.hdonghong.dhmall.product.service.impl;
 
+import com.google.common.collect.Lists;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.transaction.annotation.Transactional;
 import top.hdonghong.common.utils.PageUtils;
 import top.hdonghong.common.utils.Query;
 
 import top.hdonghong.dhmall.product.dao.CategoryDao;
 import top.hdonghong.dhmall.product.entity.CategoryEntity;
+import top.hdonghong.dhmall.product.service.CategoryBrandRelationService;
 import top.hdonghong.dhmall.product.service.CategoryService;
 
 
 @Service("categoryService")
 public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity> implements CategoryService {
+
+    @Autowired
+    private CategoryBrandRelationService categoryBrandRelationService;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -37,6 +41,31 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         List<CategoryEntity> categoryList = baseMapper.selectList(null);
         return listWithTree(0L, categoryList);
     }
+
+    @Override
+    public void removeMenuByIds(List<Long> catIdList) {
+        baseMapper.deleteBatchIds(catIdList);
+    }
+
+    @Override
+    public List<Long> findCatelogPath(Long catelogId) {
+        if (catelogId == null || Objects.equals(0L, catelogId)) {
+            return Lists.newArrayList();
+        }
+        // 当前分类不是根分类，继续向上递归
+        CategoryEntity category = this.getById(catelogId);
+        List<Long> path = findCatelogPath(category.getParentCid());
+        path.add(catelogId);
+        return path;
+    }
+
+    @Transactional
+    @Override
+    public void updateCascade(CategoryEntity category) {
+        this.updateById(category);
+        categoryBrandRelationService.updateCategory(category.getCatId(),category.getName());
+    }
+
 
     /**
      * 获取catId的子分类

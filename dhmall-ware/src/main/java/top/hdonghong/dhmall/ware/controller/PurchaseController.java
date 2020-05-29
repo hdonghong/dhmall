@@ -1,20 +1,18 @@
 package top.hdonghong.dhmall.ware.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import top.hdonghong.dhmall.ware.entity.PurchaseEntity;
 import top.hdonghong.dhmall.ware.service.PurchaseService;
 import top.hdonghong.common.utils.PageUtils;
 import top.hdonghong.common.utils.R;
-
+import top.hdonghong.dhmall.ware.vo.MergeVO;
+import top.hdonghong.dhmall.ware.vo.PurchaseDoneVO;
 
 
 /**
@@ -29,6 +27,45 @@ import top.hdonghong.common.utils.R;
 public class PurchaseController {
     @Autowired
     private PurchaseService purchaseService;
+
+
+    ///ware/purchase/done
+    @PostMapping("/done")
+    public R finish(@RequestBody PurchaseDoneVO doneVO){
+
+        purchaseService.done(doneVO);
+
+        return R.ok();
+    }
+
+    /**
+     * 领取采购单
+     * @return
+     */
+    @PostMapping("/received")
+    public R received(@RequestBody List<Long> ids){
+
+        purchaseService.received(ids);
+
+        return R.ok();
+    }
+
+    //ware/purchase/merge
+    @PostMapping("/merge")
+    public R merge(@RequestBody MergeVO mergeVO){
+
+        purchaseService.mergePurchase(mergeVO);
+        return R.ok();
+    }
+
+    @RequestMapping("/unreceive/list")
+    //@RequiresPermissions("ware:purchase:list")
+    public R unreceivelist(@RequestParam Map<String, Object> params){
+        PageUtils page = purchaseService.queryPageUnreceivePurchase(params);
+
+        return R.ok().put("page", page);
+    }
+
 
     /**
      * 列表
